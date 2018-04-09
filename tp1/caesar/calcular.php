@@ -1,6 +1,6 @@
 <?php
-function encrypt($str, $offset) {
-    $encrypted_text = "";
+function cifrar($str, $offset) {
+    $msg_cifrado = "";
     $offset = $offset % 26;
     if($offset < 0) {
         $offset += 26;
@@ -10,19 +10,19 @@ function encrypt($str, $offset) {
         $c = strtoupper($str{$i});
         if(($c >= "A") && ($c <= 'Z')) {
             if((ord($c) + $offset) > ord("Z")) {
-                $encrypted_text .= chr(ord($c) + $offset - 26);
+                $msg_cifrado .= chr(ord($c) + $offset - 26);
         } else {
-            $encrypted_text .= chr(ord($c) + $offset);
+            $msg_cifrado .= chr(ord($c) + $offset);
         }
       } else {
-          $encrypted_text .= " ";
+          $msg_cifrado .= " ";
       }
       $i++;
     }
-    return $encrypted_text;
+    return $msg_cifrado;
 }
-function decrypt($str, $offset) {
-    $decrypted_text = "";
+function descifrar($str, $offset) {
+    $msg_descifrado = "";
     $offset = $offset % 26;
     if($offset < 0) {
         $offset += 26;
@@ -32,24 +32,25 @@ function decrypt($str, $offset) {
         $c = strtoupper($str{$i});
         if(($c >= "A") && ($c <= 'Z')) {
             if((ord($c) - $offset) < ord("A")) {
-                $decrypted_text .= chr(ord($c) - $offset + 26);
+                $msg_descifrado .= chr(ord($c) - $offset + 26);
         } else {
-            $decrypted_text .= chr(ord($c) - $offset);
+            $msg_descifrado .= chr(ord($c) - $offset);
         }
       } else {
-          $decrypted_text .= " ";
+          $msg_descifrado .= " ";
       }
       $i++;
     }
-    return $decrypted_text;
+    return $msg_descifrado;
 }
 
 //sample text
-$text = "hugo doñato";
-$offset = 0;
+$operacion = $_POST['operacion'];
+$clave = $_POST['clave'];
+$mensaje = $_POST['$mensaje'];
 
-$enc = encrypt($text, $offset);
-echo $enc;
+$msg_cifrado = cifrar($mensaje, $clave);
+echo $msg_cifrado;
 echo "<br />";
-echo decrypt($enc, $offset);
+echo descifrar($msg_cifrado, $clave);
 ?>
