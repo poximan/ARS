@@ -1,47 +1,49 @@
 <?php
 
-  $dicc_mayusc = array();
-  $file = fopen('dicc_mayusc.csv', 'r');
+  $diccionario = array();
+  $file = fopen('diccionario.csv', 'r');
   while (($line = fgetcsv($file)) !== FALSE) {
-    $dicc_mayusc = $line;
+    $diccionario = $line;
   }
   fclose($file);
 
-  $dicc_minusc = array();
-  $file = fopen('dicc_minusc.csv', 'r');
-  while (($line = fgetcsv($file)) !== FALSE) {
-    $dicc_minusc = $line;
-  }
-  fclose($file);
+  /*
+  api
+  */
+  function orden($elemento){
+    global $diccionario;
 
-  function lenghtMayusc() {
-    global $dicc_mayusc;
-    return count($dicc_mayusc);
+    $orden = array_search($elemento, $diccionario);
+    return $orden;
   }
 
-  function diccionarioMayusc() {
-    global $dicc_mayusc;
-    return $dicc_mayusc;
+  function ordenInferior(){
+    return 0;
   }
 
-  function elementoMayusc($indice) {
-    global $dicc_mayusc;
-    return $dicc_mayusc[$indice];
+  function ordenSuperior(){
+    return lenght() - 1;
   }
 
-  function lenghtMinusc() {
-    global $dicc_mayusc;
-    return count($dicc_mayusc);
+  function elemento($indice) {
+    global $diccionario;
+    return $diccionario[$indice];
   }
 
-  function diccionarioMinusc() {
-    global $dicc_mayusc;
-    return $dicc_mayusc;
+  function lenght() {
+    global $diccionario;
+
+    $lenght = count($diccionario);
+    return $lenght;
   }
 
-  function elementoMinusc($indice) {
-    global $dicc_mayusc;
-    return $dicc_mayusc[$indice];
+  function toChar($indice){
+    global $diccionario;
+    return $diccionario[$indice];
+  }
+
+  function longMsg($msg) {
+    return mb_strlen($msg);
   }
 
 ?>

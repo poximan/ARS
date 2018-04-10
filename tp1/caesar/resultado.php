@@ -18,13 +18,13 @@
     mostarResultado($msj_original, $operacion, $clave);
   }
 
-  echo "mensaje resultante {$msj_resultado}";
+  echo "mensaje resultante: {$msj_resultado}";
 
   function mostarResultado($msj_original, $operacion, $clave){
 
     echo "mensaje original: {$msj_original}";
     echo "<br/>";
-    echo "para {$operacion} se uso {$clave} desplazamiento";
+    echo "para {$operacion} se uso como clave {$clave} desplazamientos";
     echo "<br/>";
   }
 ?>

@@ -1,59 +1,33 @@
 <?php
 
-  include "diccionario.php";
-
-  const DICCIONARIO = 26;
+  include 'diccionario.php';
+  $DICCIONARIO = lenght();
 
   function cifrar($msg, $offset) {
 
+    global $DICCIONARIO;
+
     $msg_cifrado = "";
-    $offset = $offset % DICCIONARIO;
+    $offset = $offset % $DICCIONARIO;
 
     if($offset < 0) {
-      $offset += DICCIONARIO;
+      $offset += $DICCIONARIO;
     }
 
     $i = 0;
-    while($i < strlen($msg)) {
+    while($i < mb_strlen($msg)) {
 
-      /*
-      si el siguiente caracter esta escrito en mayuscula
-      */
-      if(ctype_upper($msg{$i})) {
+      $c = mb_substr($msg,$i);
 
-        $c = $msg{$i};
+      if((orden($c) >= ordenInferior()) && (orden($c) <= ordenSuperior())) {
 
-        if(($c >= "A") && ($c <= 'Z')) {
-
-          // valor ASCII del primer caracter
-          if((ord($c) + $offset) > ord("Z")) {
-            $msg_cifrado .= chr(ord($c) + $offset - DICCIONARIO);
-          } else {
-            $msg_cifrado .= chr(ord($c) + $offset);
-          }
+        if((orden($c) + $offset) > ordenSuperior()) {
+          $msg_cifrado .= toChar(orden($c) + $offset - $DICCIONARIO);
         } else {
-          $msg_cifrado .= " ";
+          $msg_cifrado .= toChar(orden($c) + $offset);
         }
-      }
-
-      /*
-      si el siguiente caracter esta escrito en minuscula
-      */
-      if(!ctype_upper($msg{$i})) {
-
-        $c = $msg{$i};
-
-        if(($c >= "a") && ($c <= 'z')) {
-
-          // valor ASCII del primer caracter
-          if((ord($c) + $offset) > ord("z")) {
-            $msg_cifrado .= chr(ord($c) + $offset - DICCIONARIO);
-          } else {
-            $msg_cifrado .= chr(ord($c) + $offset);
-          }
-        } else {
-          $msg_cifrado .= " ";
-        }
+      } else {
+        $msg_cifrado .= " ";
       }
 
       $i++;
@@ -63,53 +37,29 @@
 
   function descifrar($msg, $offset) {
 
+    global $DICCIONARIO;
+
     $msg_descifrado = "";
-    $offset = $offset % DICCIONARIO;
+    $offset = $offset % $DICCIONARIO;
 
     if($offset < 0) {
-      $offset += DICCIONARIO;
+      $offset += $DICCIONARIO;
     }
+
     $i = 0;
     while($i < strlen($msg)) {
 
-      /*
-      si el siguiente caracter esta escrito en mayuscula
-      */
-      if(ctype_upper($msg{$i})) {
+      $c = $msg{$i};
 
-        $c = $msg{$i};
+      if((orden($c) >= ordenInferior()) && (orden($c) <= ordenSuperior())) {
 
-        if(($c >= "A") && ($c <= 'Z')) {
-
-          // valor ASCII del primer caracter
-          if((ord($c) - $offset) < ord("A")) {
-            $msg_descifrado .= chr(ord($c) - $offset + DICCIONARIO);
-          } else {
-            $msg_descifrado .= chr(ord($c) - $offset);
-          }
+        if((orden($c) - $offset) < ordenInferior()) {
+          $msg_descifrado .= toChar(orden($c) - $offset + $DICCIONARIO);
         } else {
-          $msg_descifrado .= " ";
+          $msg_descifrado .= toChar(orden($c) - $offset);
         }
-      }
-
-      /*
-      si el siguiente caracter esta escrito en minuscula
-      */
-      if(!ctype_upper($msg{$i})) {
-
-        $c = $msg{$i};
-
-        if(($c >= "a") && ($c <= 'z')) {
-
-          // valor ASCII del primer caracter
-          if((ord($c) - $offset) < ord("a")) {
-            $msg_descifrado .= chr(ord($c) - $offset + DICCIONARIO);
-          } else {
-            $msg_descifrado .= chr(ord($c) - $offset);
-          }
-        } else {
-          $msg_descifrado .= " ";
-        }
+      } else {
+        $msg_descifrado .= " ";
       }
 
       $i++;
