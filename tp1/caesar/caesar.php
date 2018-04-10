@@ -17,7 +17,7 @@
     $i = 0;
     while($i < mb_strlen($msg)) {
 
-      $c = mb_substr($msg,$i);
+      $c = mb_substr($msg,$i, 1);
 
       if((orden($c) >= ordenInferior()) && (orden($c) <= ordenSuperior())) {
 
@@ -47,9 +47,9 @@
     }
 
     $i = 0;
-    while($i < strlen($msg)) {
+    while($i < mb_strlen($msg)) {
 
-      $c = $msg{$i};
+      $c = mb_substr($msg,$i, 1);
 
       if((orden($c) >= ordenInferior()) && (orden($c) <= ordenSuperior())) {
 

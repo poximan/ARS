@@ -13,8 +13,12 @@
   function orden($elemento){
     global $diccionario;
 
-    $orden = array_search($elemento, $diccionario);
-    return $orden;
+    $indice = array_search($elemento, $diccionario);
+
+    if ($indice == "")
+      $indice = -1;
+
+    return $indice;
   }
 
   function ordenInferior(){
@@ -32,18 +36,12 @@
 
   function lenght() {
     global $diccionario;
-
-    $lenght = count($diccionario);
-    return $lenght;
+    return count($diccionario);
   }
 
   function toChar($indice){
     global $diccionario;
     return $diccionario[$indice];
-  }
-
-  function longMsg($msg) {
-    return mb_strlen($msg);
   }
 
 ?>
