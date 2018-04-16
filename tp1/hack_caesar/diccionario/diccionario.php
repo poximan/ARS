@@ -3,19 +3,30 @@
   $gestor = fopen("diccionario/diccionario.txt", "r");
   if ($gestor)
     while (($buffer = fgets($gestor)) !== false)
-      $diccionario[] = substr($buffer, 0, 1);
+      $diccionario[] = trim($buffer);
 
   fclose($gestor);
 
   /*
   api
   */
-  function existe($elemento){
+  function evaluarPalabra($frase){
 
     global $diccionario;
-    $indice = array_search($elemento, $diccionario);
+    $palabras = explode(" ", $frase);
+    $puntaje = 0;
 
-    return ($indice != false);
+    foreach ($palabras as $palabra) {
+
+      if(strlen($palabra) <= 1)
+        continue;
+
+      $indice = array_search($palabra, $diccionario);
+
+      if ($indice != false)
+        $puntaje++;
+    }
+    return $puntaje;
   }
 
 ?>

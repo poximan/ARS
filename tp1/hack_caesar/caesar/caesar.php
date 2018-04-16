@@ -1,6 +1,6 @@
 <?php
 
-  include "simbolos/simbolos.php";
+  include "caesar/simbolos/simbolos.php";
   $CANT_SIMBOLOS = lenght();
 
   function cifrar($msg, $offset) {

@@ -4,15 +4,21 @@
 
   $msj_original = $_POST['mensaje'];
 
-  $claves = buscarClave($msj_original);
+  $msg_descifrado = buscarClave($msj_original);
+  mostarResultado($msj_original, $msg_descifrado);
 
-  //mostarResultado($msj_original, $clave);
+  function mostarResultado($msj_original, $msg_descifrado){
 
-  function mostarResultado($msj_original, $clave){
+    echo "mensaje cifrado: {$msj_original} <br/><br/>";
+    echo "claves candidatas <br/>";
+    echo "----------------------<br/>";
 
-    echo "mensaje cifrado: {$msj_original}";
-    echo "<br/>";
-    echo "se uso desplazamiento de {$clave} digitos";
-    echo "<br/>";
+    $maximo = (count($msg_descifrado) > 10)? 10 : count($msg_descifrado);
+
+    for($i = 0; $i < $maximo; $i++){
+      print "clave: " . $msg_descifrado[$i]["offset"] . " | mensaje descifrado: " . $msg_descifrado[$i]["palabra"];
+      echo "<br/>";
+    }
   }
+
 ?>

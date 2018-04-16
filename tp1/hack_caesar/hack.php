@@ -9,14 +9,27 @@
 
     while($offset < lenght()){
 
-      $msg_descifrado[] = descifrar($msg, $offset);
+      $palabra = descifrar($msg, $offset);
+      $puntaje = evaluarPalabra($palabra);
 
-      echo $msg_descifrado[$offset];
-      echo "<br/>";
+      $msg_descifrado[$offset] = array(
+        "offset" => $offset,
+        "puntaje" => $puntaje,
+        "palabra" => $palabra
+      );
 
       $offset++;
     }
 
+    usort($msg_descifrado, 'ordenarPorPuntaje');
     return $msg_descifrado;
+  }
+
+  function ordenarPorPuntaje($a, $b) {
+    $a = $a['puntaje'];
+    $b = $b['puntaje'];
+
+    if ($a == $b) return 0;
+    return ($a > $b) ? -1 : 1;
   }
 ?>
