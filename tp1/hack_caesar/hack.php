@@ -1,35 +1,36 @@
 <?php
 
-  include "diccionario/diccionario.php";
-  include "caesar/caesar.php";
+include "diccionario/diccionario.php";
+include "caesar/caesar.php";
 
-  function buscarClave($msg) {
+function buscarClave($msg) {
 
-    $offset = 0;
+  $offset = 0;
 
-    while($offset < lenght()){
+  while($offset < lenght()){
 
-      $palabra = descifrar($msg, $offset);
-      $puntaje = evaluarPalabra($palabra);
+    $palabra = descifrar($msg, $offset);
+    $puntaje = evaluarPalabra($palabra);
 
-      $msg_descifrado[$offset] = array(
-        "offset" => $offset,
-        "puntaje" => $puntaje,
-        "palabra" => $palabra
-      );
+    $msg_descifrado[$offset] = array(
+      "offset" => $offset,
+      "puntaje" => $puntaje,
+      "palabra" => $palabra
+    );
 
-      $offset++;
-    }
-
-    usort($msg_descifrado, 'ordenarPorPuntaje');
-    return $msg_descifrado;
+    $offset++;
   }
 
-  function ordenarPorPuntaje($a, $b) {
-    $a = $a['puntaje'];
-    $b = $b['puntaje'];
+  usort($msg_descifrado, 'ordenarPorPuntaje');
+  return $msg_descifrado;
+}
 
-    if ($a == $b) return 0;
-    return ($a > $b) ? -1 : 1;
-  }
+function ordenarPorPuntaje($a, $b) {
+  $a = $a['puntaje'];
+  $b = $b['puntaje'];
+
+  if ($a == $b) return 0;
+  return ($a > $b) ? -1 : 1;
+}
+
 ?>
