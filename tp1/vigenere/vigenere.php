@@ -3,57 +3,70 @@
 include "simbolos/simbolos.php";
 $CANT_SIMBOLOS = lenght();
 
-// function to encrypt the text given
+/*
+cifrar - https://www.youtube.com/watch?v=8Pb5U64iwV4
+ci = (mi + ki) mod n
+*/
 function cifrar($msg, $clave) {
-	
-	$clave = strtolower($clave);
+
+	global $CANT_SIMBOLOS;
+
 	$msg_cifrado = "";
-	$ki = 0;
-	$kl = strlen($clave);
-	$length = strlen($msg);
+	$tam_clave = strlen($clave);
 
-	for ($i = 0; $i < $length; $i++) {
+	$i = 0;
+  while($i < mb_strlen($msg)) {
 
-		$c = mb_substr($msg,$i, 1);
+		$m = mb_substr($msg, $i, 1);
+		$k = $clave[$i % $tam_clave];
 
-		$msg_cifrado .= toChar(
-			((orden($clave[$ki]) - ordenInferior() + ord($c) - ordenInferior()) % $CANT_SIMBOLOS) + ordenInferior()
-		);
+		if((orden($m) >= ordenInferior()) && (orden($m) <= ordenSuperior())) {
 
-		$ki++;
-		if ($ki >= $kl) {
-			$ki = 0;
-		}
+			if((orden($m) + orden($k)) > ordenSuperior()) {
+        $msg_cifrado .= toChar(((orden($m) + orden($k)) % $CANT_SIMBOLOS) - $CANT_SIMBOLOS);
+      } else {
+        $msg_cifrado .= toChar((orden($m) + orden($k)) % $CANT_SIMBOLOS);
+      }
+    } else {
+      $msg_cifrado .= " ERROR: simb \"$m\" desc pos $i";
+      $i = mb_strlen($msg);
+    }
+
+    $i++;
 	}
 	return $msg_cifrado;
 }
 
+/*
+descifrar - https://www.youtube.com/watch?v=8Pb5U64iwV4
+mi = (ci - ki) mod n
+*/
 function descifrar($msg, $clave) {
 
-	$clave = strtolower($clave);
+	global $CANT_SIMBOLOS;
+
 	$msg_descifrado = "";
-	$ki = 0;
-	$kl = strlen($clave);
-	$length = strlen($msg);
+	$tam_clave = strlen($clave);
 
-	for ($i = 0; $i < $length; $i++) {
-		$c = mb_substr($msg,$i, 1);
+	$i = 0;
+  while($i < mb_strlen($msg)) {
 
-		$x = (ord($c) - ord("A")) - (ord($clave[$ki]) - ord("a"));
+		$m = mb_substr($msg, $i, 1);
+		$k = $clave[$i % $tam_clave];
 
-		if ($x < 0)	{
-			$x += $CANT_SIMBOLOS;
-		}
+		if((orden($m) >= ordenInferior()) && (orden($m) <= ordenSuperior())) {
 
-		$x = $x + ord("A");
+			if((orden($m) - orden($k)) < ordenInferior()) {
+        $msg_descifrado .= toChar(((orden($m) - orden($k)) % $CANT_SIMBOLOS) + $CANT_SIMBOLOS);
+      } else {
+        $msg_descifrado .= toChar((orden($m) - orden($k)) % $CANT_SIMBOLOS);
+      }
+    } else {
+      $msg_descifrado .= " ERROR: simb \"$m\" desc pos $i";
+      $i = mb_strlen($msg);
+    }
 
-		$msg_descifrado .= chr($x);
-
-		// update the index of key
-		$ki++;
-		if ($ki >= $kl)	{
-			$ki = 0;
-		}
+    $i++;
 	}
 	return $msg_descifrado;
 }

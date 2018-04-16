@@ -17,7 +17,7 @@ function cifrar($msg, $offset) {
   $i = 0;
   while($i < mb_strlen($msg)) {
 
-    $c = mb_substr($msg,$i, 1);
+    $c = mb_substr($msg, $i, 1);
 
     if((orden($c) >= ordenInferior()) && (orden($c) <= ordenSuperior())) {
 
@@ -50,7 +50,7 @@ function descifrar($msg, $offset) {
   $i = 0;
   while($i < mb_strlen($msg)) {
 
-    $c = mb_substr($msg,$i, 1);
+    $c = mb_substr($msg, $i, 1);
 
     if((orden($c) >= ordenInferior()) && (orden($c) <= ordenSuperior())) {
 
