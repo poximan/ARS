@@ -24,7 +24,7 @@
 
     echo "mensaje original: {$msj_original}";
     echo "<br/>";
-    echo "para {$operacion} se uso como clave {$clave} desplazamientos";
+    echo "para {$operacion} se uso desplazamiento de {$clave} digitos";
     echo "<br/>";
   }
 ?>

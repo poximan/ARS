@@ -1,30 +1,18 @@
 <?php
 
-  include "caesar.php";
+  include "hack.php";
 
-  $operacion = $_POST['operacion'];
-  $clave = $_POST['clave'];
   $msj_original = $_POST['mensaje'];
 
-  $msj_resultado = "";
+  $claves = buscarClave($msj_original);
 
-  if ($operacion == "cifrar"){
-    $msj_resultado = cifrar($msj_original, $clave);
-    mostarResultado($msj_original, $operacion, $clave);
-  }
+  //mostarResultado($msj_original, $clave);
 
-  if ($operacion == "descifrar") {
-    $msj_resultado = descifrar($msj_original, $clave);
-    mostarResultado($msj_original, $operacion, $clave);
-  }
+  function mostarResultado($msj_original, $clave){
 
-  echo "mensaje resultante: {$msj_resultado}";
-
-  function mostarResultado($msj_original, $operacion, $clave){
-
-    echo "mensaje original: {$msj_original}";
+    echo "mensaje cifrado: {$msj_original}";
     echo "<br/>";
-    echo "para {$operacion} se uso como clave {$clave} desplazamientos";
+    echo "se uso desplazamiento de {$clave} digitos";
     echo "<br/>";
   }
 ?>

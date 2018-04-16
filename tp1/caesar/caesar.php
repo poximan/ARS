@@ -1,17 +1,17 @@
 <?php
 
-  include 'diccionario.php';
-  $DICCIONARIO = lenght();
+  include "simbolos/simbolos.php";
+  $CANT_SIMBOLOS = lenght();
 
   function cifrar($msg, $offset) {
 
-    global $DICCIONARIO;
+    global $CANT_SIMBOLOS;
 
     $msg_cifrado = "";
-    $offset = $offset % $DICCIONARIO;
+    $offset = $offset % $CANT_SIMBOLOS;
 
     if($offset < 0) {
-      $offset += $DICCIONARIO;
+      $offset += $CANT_SIMBOLOS;
     }
 
     $i = 0;
@@ -22,12 +22,13 @@
       if((orden($c) >= ordenInferior()) && (orden($c) <= ordenSuperior())) {
 
         if((orden($c) + $offset) > ordenSuperior()) {
-          $msg_cifrado .= toChar(orden($c) + $offset - $DICCIONARIO);
+          $msg_cifrado .= toChar(orden($c) + $offset - $CANT_SIMBOLOS);
         } else {
           $msg_cifrado .= toChar(orden($c) + $offset);
         }
       } else {
-        $msg_cifrado .= " ";
+        $msg_cifrado .= " ERROR: simb \"$c\" desc pos $i";
+        $i = mb_strlen($msg);
       }
 
       $i++;
@@ -37,13 +38,13 @@
 
   function descifrar($msg, $offset) {
 
-    global $DICCIONARIO;
+    global $CANT_SIMBOLOS;
 
     $msg_descifrado = "";
-    $offset = $offset % $DICCIONARIO;
+    $offset = $offset % $CANT_SIMBOLOS;
 
     if($offset < 0) {
-      $offset += $DICCIONARIO;
+      $offset += $CANT_SIMBOLOS;
     }
 
     $i = 0;
@@ -54,12 +55,13 @@
       if((orden($c) >= ordenInferior()) && (orden($c) <= ordenSuperior())) {
 
         if((orden($c) - $offset) < ordenInferior()) {
-          $msg_descifrado .= toChar(orden($c) - $offset + $DICCIONARIO);
+          $msg_descifrado .= toChar(orden($c) - $offset + $CANT_SIMBOLOS);
         } else {
           $msg_descifrado .= toChar(orden($c) - $offset);
         }
       } else {
-        $msg_descifrado .= " ";
+        $msg_cifrado .= " ERROR: simb \"$c\" desc pos $i";
+        $i = mb_strlen($msg);
       }
 
       $i++;
