@@ -11,7 +11,7 @@ exports.guardar = function(usr, pass) {
   );
 }
 
-MongoClient.connect('mongodb://mongo:27017/bd_login', function(err, db) {
+MongoClient.connect('mongodb://localhost:27017/bd_login', function(err, db) {
 
   if(err) throw err;
 
