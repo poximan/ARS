@@ -1,8 +1,12 @@
-var express = require('express');
-var app = express();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-var path = require('path')
+let express = require('express')
+let app = express()
+
+let http = require('http').Server(app)
+
+let io = require('socket.io')(http)
+let path = require('path')
+
+let storage_api = require("./storage-api.js")
 
 app.use(express.static(path.join(__dirname, 'public')));
 

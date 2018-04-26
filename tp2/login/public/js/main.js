@@ -13,14 +13,16 @@
             else {
                 $(this).removeClass('has-val');
             }
-        })    
+        })
     })
-  
-  
+
+
     /*==================================================================
     [ Validate ]*/
     var input = $('.validate-input .input100');
 
+    console.log(input);
+    
     $('.validate-form').on('submit',function(){
         var check = true;
 
@@ -65,7 +67,7 @@
 
         $(thisAlert).removeClass('alert-validate');
     }
-    
+
     /*==================================================================
     [ Show pass ]*/
     var showPass = 0;
@@ -82,7 +84,7 @@
             $(this).find('i').removeClass('zmdi-eye-off');
             showPass = 0;
         }
-        
+
     });
 
 
