@@ -6,7 +6,8 @@ let http = require('http').Server(app)
 let io = require('socket.io')(http)
 let path = require('path')
 
-let storage_api = require("./storage-api.js")
+let storage_api = require("./storage-api")
+let cifrador = require("./cifrar")
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -17,9 +18,18 @@ app.get('/', function(req, res){
 io.on('connection', function(socket){
   console.log('usuario conectado');
 
-  socket.on('login', function(email, pass){
-    console.log(email);
-    console.log(pass);
+  socket.on('login', function(usr, pass){
+
+    cifrador.cifrar(usr, pass)
+    let hash_pass = cifrador.hash;
+    storage_api.validar(usr, hash_pass)
+  });
+
+  socket.on('crear', function(usr, pass){
+
+    cifrador.cifrar(usr, pass)
+    let hash_pass = cifrador.hash;
+    storage_api.guardar(usr, hash_pass)
   });
 
   socket.on('disconnect', function(){
