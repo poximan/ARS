@@ -16,20 +16,28 @@ app.get('/', function(req, res){
 });
 
 io.on('connection', function(socket){
-  console.log('usuario conectado');
+  console.log('cliente conectado');
 
   socket.on('login', function(usr, pass){
 
     cifrador.cifrar(usr, pass)
     let hash_pass = cifrador.hash;
-    storage_api.validar(usr, hash_pass)
+
+    if(storage_api.validar(usr, hash_pass))
+      console.log("Usuario autenticado");
+    else
+      console.log("Usuario no autenticado");
   });
 
-  socket.on('crear', function(usr, pass){
+  socket.on('crear', function(nombre, usr, pass, nuevo_pass){
 
     cifrador.cifrar(usr, pass)
     let hash_pass = cifrador.hash;
-    storage_api.guardar(usr, hash_pass)
+
+    if(storage_api.guardar(usr, hash_pass))
+      console.log("Usuario creado");
+    else
+      console.log("Ya existe usuario con ese nombre");
   });
 
   socket.on('disconnect', function(){

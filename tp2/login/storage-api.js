@@ -5,23 +5,40 @@ var db_global;
 exports.validar = function(usr, pass) {
 
   let doc;
-  async function pedirDatos() {
-    await console.log("entrando..");
-    await let coleccion_obj = db_global.collection("colecc_login");
-    await console.log("esto antes");
-    return await doc = coleccion_obj.findOne( { usr: usr, pass: pass } );
+
+  function conectar() {
+    return new Promise(resolve => {
+      resolve(db_global.collection("colecc_login"));
+    });
   }
-  pedirDatos();
-  console.log(doc);
+
+  function buscar(coleccion_obj, usr, pass) {
+    return new Promise(resolve => {
+      resolve(coleccion_obj.findOne( { usr: usr, pass: pass } ));
+    });
+  }
+
+  async function funcSync() {
+    let coleccion_obj = await conectar();
+    doc = await buscar(coleccion_obj, usr, pass);
+    await console.log(doc);
+    return await (doc == null)? false : true;
+  }
+  funcSync();
 }
 
 exports.guardar = function(usr, pass) {
 
   var coleccion_obj = db_global.collection("colecc_login");
 
-  coleccion_obj.save(
-    { fecha: new Date(), usr: usr, pass: pass }
-  );
+  if(!exports.validar(usr, pass)){
+    const res = coleccion_obj.save(
+      { fecha: new Date(), usr: usr, pass: pass }
+    );
+    return true
+  }
+  else
+    return false
 }
 
 MongoClient.connect('mongodb://localhost:27017/bd_login', function(err, db) {
