@@ -1,51 +1,48 @@
-var MongoClient = require("mongodb").MongoClient;
+var MongoClient = require("mongodb").MongoClient
+const util = require("util")
 
-var db_global;
+module.exports = function(){
 
-exports.validar = function(usr, pass) {
+  var module = {};
 
-  let doc;
+  let coleccion;
 
-  function conectar() {
-    return new Promise(resolve => {
-      resolve(db_global.collection("colecc_login"));
+  module.existe = function(usr, pass, callback) {
+
+    (async() => {
+      let doc = await coleccion.findOne( {usr: usr, pass: pass} )
+      callback((doc == null) ? false : true)
+    })()
+  }
+
+  module.enUso = function(usr, callback) {
+
+    (async() => {
+      let doc = await coleccion.findOne( {usr: usr} )
+      callback((doc == null)? false : true)
+    })()
+  }
+
+  module.guardar = function(usr, pass, callback) {
+
+    module.enUso(usr, (existe) => {
+
+      if(!existe)
+        coleccion.save( { fecha: new Date(), usr: usr, pass: pass } );
+
+      callback((existe)? false : true)
+    })
+  }
+
+  MongoClient.connect('mongodb://localhost:27017/bd_login', function(err, db) {
+
+    if(err) throw err;
+
+    var dbase = db.db("bd_login");
+    dbase.createCollection("colecc_login", () => {
+      coleccion = dbase.collection("colecc_login")
     });
-  }
+  });
 
-  function buscar(coleccion_obj, usr, pass) {
-    return new Promise(resolve => {
-      resolve(coleccion_obj.findOne( { usr: usr, pass: pass } ));
-    });
-  }
-
-  async function funcSync() {
-    let coleccion_obj = await conectar();
-    doc = await buscar(coleccion_obj, usr, pass);
-    await console.log(doc);
-    return await (doc == null)? false : true;
-  }
-  funcSync();
+  return module;
 }
-
-exports.guardar = function(usr, pass) {
-
-  var coleccion_obj = db_global.collection("colecc_login");
-
-  if(!exports.validar(usr, pass)){
-    const res = coleccion_obj.save(
-      { fecha: new Date(), usr: usr, pass: pass }
-    );
-    return true
-  }
-  else
-    return false
-}
-
-MongoClient.connect('mongodb://localhost:27017/bd_login', function(err, db) {
-
-  if(err) throw err;
-
-  var dbase = db.db("bd_login");
-  dbase.createCollection("colecc_login");
-  db_global = dbase;
-});

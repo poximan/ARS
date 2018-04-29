@@ -6,13 +6,14 @@ let http = require('http').Server(app)
 let io = require('socket.io')(http)
 let path = require('path')
 
-let storage_api = require("./storage-api")
+let storage_api = require("./storage-api")();
 let cifrador = require("./cifrar")
 
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/public/index.html');
+  console.log("pidiendo pagina");
 });
 
 io.on('connection', function(socket){
@@ -23,10 +24,14 @@ io.on('connection', function(socket){
     cifrador.cifrar(usr, pass)
     let hash_pass = cifrador.hash;
 
-    if(storage_api.validar(usr, hash_pass))
-      console.log("Usuario autenticado");
-    else
-      console.log("Usuario no autenticado");
+    storage_api.existe(usr, hash_pass, (existe) => {
+      if(existe){
+        console.log("Usuario autenticado");        
+        socket.emit("autenticado", {});
+      }
+      else
+        console.log("Usuario no autenticado");
+    })
   });
 
   socket.on('crear', function(nombre, usr, pass, nuevo_pass){
@@ -34,10 +39,14 @@ io.on('connection', function(socket){
     cifrador.cifrar(usr, pass)
     let hash_pass = cifrador.hash;
 
-    if(storage_api.guardar(usr, hash_pass))
-      console.log("Usuario creado");
-    else
-      console.log("Ya existe usuario con ese nombre");
+    storage_api.guardar(usr, hash_pass, (creado) => {
+      if(creado){
+        console.log("Usuario creado");
+        socket.emit("creado", {});
+      }
+      else
+        console.log("Ya existe usuario con ese nombre");
+    })
   });
 
   socket.on('disconnect', function(){
