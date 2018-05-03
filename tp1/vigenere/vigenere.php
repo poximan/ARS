@@ -23,7 +23,7 @@ function cifrar($msg, $clave) {
 		if((orden($m) >= ordenInferior()) && (orden($m) <= ordenSuperior())) {
 
 			if((orden($m) + orden($k)) > ordenSuperior()) {
-        $msg_cifrado .= toChar(((orden($m) + orden($k)) % $CANT_SIMBOLOS) - $CANT_SIMBOLOS);
+        $msg_cifrado .= toChar((orden($m) + orden($k)) % $CANT_SIMBOLOS);
       } else {
         $msg_cifrado .= toChar((orden($m) + orden($k)) % $CANT_SIMBOLOS);
       }
