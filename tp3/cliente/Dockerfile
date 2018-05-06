@@ -1,0 +1,1 @@
+FROM img-sshd:latest
