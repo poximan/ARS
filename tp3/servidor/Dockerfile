@@ -1,5 +1,19 @@
 FROM img-sshd:latest
 
+# usuario hdonato
+# --------------------------
+RUN adduser hdonato --disabled-password
+USER hdonato
+WORKDIR /home/hdonato
+
+RUN mkdir .ssh
+# usr(rwx)  grp(rwx) oth(rwx)
+RUN chmod 700 .ssh
+RUN touch .ssh/authorized_keys
+RUN chmod 600 .ssh/authorized_keys
+
+USER root
+
 # usuario labella
 # --------------------------
 RUN adduser labella --disabled-password
@@ -71,3 +85,4 @@ RUN chmod 600 .ssh/authorized_keys
 USER root
 
 CMD ["/usr/sbin/sshd", "-D"]
+# /usr/sbin/sshd -D
