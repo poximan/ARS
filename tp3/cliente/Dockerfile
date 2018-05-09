@@ -2,11 +2,19 @@ FROM img-sshd:latest
 
 # usuario hdonato
 # --------------------------
-RUN adduser hdonato --disabled-password
-USER hdonato
+RUN useradd -ms /bin/bash hdonato
 WORKDIR /home/hdonato
+RUN echo 'hdonato:hdonato' | chpasswd
+
+USER hdonato
+
 RUN mkdir .ssh
-WORKDIR /home/hdonato/.ssh
-# ssh-keygen -b 2048 -t rsa -f /home/hdonato/.ssh/id_rsa -q -N ""
-# scp ./id_rsa.pub hdonato@exec-sshd-serv:/home/hdonato/.ssh/id_rsa.pub
-# ssh hdonato@exec-sshd-serv "echo `cat /home/hdonato/.ssh/id_rsa.pub` >> /home/hdonato/.ssh/authorized_keys"
+# usr(rwx)  grp(rwx) oth(rwx)
+RUN chmod 700 .ssh
+RUN touch .ssh/authorized_keys
+RUN chmod 600 .ssh/authorized_keys
+
+RUN echo "generando clave asimetrica"
+RUN ssh-keygen -t rsa -f .ssh/id_rsa -q -N ""
+
+# scp .ssh/id_rsa.pub hdonato@exec-sshd-serv:/home/hdonato/.ssh/hdonato_id_rsa.pub

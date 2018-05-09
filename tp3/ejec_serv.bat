@@ -1,2 +1,2 @@
 docker network create red-docker
-docker run --name exec-sshd-serv --net=red-docker -ti img-sshd-serv bash
+docker run --entrypoint /bin/bash -i -t --net=red-docker --name exec-sshd-serv img-sshd-serv
