@@ -1,0 +1,49 @@
+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+
+06/10-22:31:28.112698 1C:1B:0D:52:E1:A4 -> 18:A6:F7:A4:E7:D0 type:0x800 len:0x36
+192.168.0.102:55599 -> 188.40.62.8:80 TCP TTL:128 TOS:0x0 ID:12400 IpLen:20 DgmLen:40 DF
+***A**** Seq: 0xAAAA7EE7  Ack: 0x513FB0C7  Win: 0x100  TcpLen: 20
+
+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+
+06/10-22:31:28.113489 1C:1B:0D:52:E1:A4 -> 18:A6:F7:A4:E7:D0 type:0x800 len:0x270
+192.168.0.102:55599 -> 188.40.62.8:80 TCP TTL:128 TOS:0x0 ID:12401 IpLen:20 DgmLen:610 DF
+***AP*** Seq: 0xAAAA7EE7  Ack: 0x513FB0C7  Win: 0x100  TcpLen: 20
+50 4F 53 54 20 2F 73 65 72 76 6C 65 74 2F 67 65  POST /servlet/ge
+6F 6E 61 6D 65 73 3F 20 48 54 54 50 2F 31 2E 31  onames? HTTP/1.1
+0D 0A 48 6F 73 74 3A 20 77 77 77 2E 67 65 6F 6E  ..Host: www.geon
+61 6D 65 73 2E 6F 72 67 0D 0A 55 73 65 72 2D 41  ames.org..User-A
+67 65 6E 74 3A 20 4D 6F 7A 69 6C 6C 61 2F 35 2E  gent: Mozilla/5.
+30 20 28 57 69 6E 64 6F 77 73 20 4E 54 20 31 30  0 (Windows NT 10
+2E 30 3B 20 57 69 6E 36 34 3B 20 78 36 34 3B 20  .0; Win64; x64; 
+72 76 3A 35 39 2E 30 29 20 47 65 63 6B 6F 2F 32  rv:59.0) Gecko/2
+30 31 30 30 31 30 31 20 46 69 72 65 66 6F 78 2F  0100101 Firefox/
+35 39 2E 30 0D 0A 41 63 63 65 70 74 3A 20 74 65  59.0..Accept: te
+78 74 2F 68 74 6D 6C 2C 61 70 70 6C 69 63 61 74  xt/html,applicat
+69 6F 6E 2F 78 68 74 6D 6C 2B 78 6D 6C 2C 61 70  ion/xhtml+xml,ap
+70 6C 69 63 61 74 69 6F 6E 2F 78 6D 6C 3B 71 3D  plication/xml;q=
+30 2E 39 2C 2A 2F 2A 3B 71 3D 30 2E 38 0D 0A 41  0.9,*/*;q=0.8..A
+63 63 65 70 74 2D 4C 61 6E 67 75 61 67 65 3A 20  ccept-Language: 
+65 73 2D 41 52 0D 0A 41 63 63 65 70 74 2D 45 6E  es-AR..Accept-En
+63 6F 64 69 6E 67 3A 20 67 7A 69 70 2C 20 64 65  coding: gzip, de
+66 6C 61 74 65 0D 0A 52 65 66 65 72 65 72 3A 20  flate..Referer: 
+68 74 74 70 3A 2F 2F 77 77 77 2E 67 65 6F 6E 61  http://www.geona
+6D 65 73 2E 6F 72 67 2F 6C 6F 67 69 6E 0D 0A 43  mes.org/login..C
+6F 6E 74 65 6E 74 2D 54 79 70 65 3A 20 61 70 70  ontent-Type: app
+6C 69 63 61 74 69 6F 6E 2F 78 2D 77 77 77 2D 66  lication/x-www-f
+6F 72 6D 2D 75 72 6C 65 6E 63 6F 64 65 64 0D 0A  orm-urlencoded..
+43 6F 6E 74 65 6E 74 2D 4C 65 6E 67 74 68 3A 20  Content-Length: 
+37 33 0D 0A 43 6F 6F 6B 69 65 3A 20 4A 53 45 53  73..Cookie: JSES
+53 49 4F 4E 49 44 3D 44 44 36 33 44 43 33 36 34  SIONID=DD63DC364
+41 31 45 30 37 36 46 35 43 44 32 44 33 37 39 39  A1E076F5CD2D3799
+33 31 37 43 45 33 36 0D 0A 43 6F 6E 6E 65 63 74  317CE36..Connect
+69 6F 6E 3A 20 6B 65 65 70 2D 61 6C 69 76 65 0D  ion: keep-alive.
+0A 55 70 67 72 61 64 65 2D 49 6E 73 65 63 75 72  .Upgrade-Insecur
+65 2D 52 65 71 75 65 73 74 73 3A 20 31 0D 0A 0D  e-Requests: 1...
+0A 75 73 65 72 6E 61 6D 65 3D 6E 75 65 76 6F 2D  .username=nuevo-
+75 73 75 61 72 69 6F 26 70 61 73 73 77 6F 72 64  usuario&password
+3D 6E 75 65 76 61 2D 63 6F 6E 74 72 61 73 65 25  =nueva-contrase%
+43 33 25 42 31 61 26 72 65 6D 65 6D 62 65 72 6D  C3%B1a&rememberm
+65 3D 31 26 73 72 76 3D 31 32                    e=1&srv=12
+
+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+

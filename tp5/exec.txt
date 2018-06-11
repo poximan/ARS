@@ -1,1 +1,1 @@
-snort -vde -l c:/Snort/log -c c:\Snort\etc\snort.conf
+snort -vde -l c:/Snort/log -c c:\Snort\etc\snort.conf > d:\documentos\hugo\git\ARS\tp5\dump-seg.txt
