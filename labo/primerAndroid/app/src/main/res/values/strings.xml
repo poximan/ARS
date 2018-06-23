@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">primerAndroid</string>
+    <string name="action_settings">Settings</string>
+    <string name="hint_authorText" >author</string>
+    <string name="hint_quoteText">add your quote here</string>
+    <string name="button_save">Save</string>
+</resources>
