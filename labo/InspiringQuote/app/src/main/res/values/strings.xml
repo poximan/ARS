@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Inspiring Quote</string>
+    <string name="title_activity_main">Inspiring Quote</string>
+    <string name="hint_quoteText">add your quote here!</string>
+    <string name="hint_author">author</string>
+    <string name="button_save">Save</string>
+    <string name="button_fetch">Fetch</string>
+    <string name="hint_inspirationQuote">inspirational quote goes here</string>
+</resources>

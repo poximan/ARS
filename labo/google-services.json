@@ -8,17 +8,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:861348409104:android:838679cd3fd94a12",
+        "mobilesdk_app_id": "1:861348409104:android:4df06f83ae95f830",
         "android_client_info": {
-          "package_name": "com.example.donat.primerandroid"
+          "package_name": "edu.unpsjb.inspiringquote"
         }
       },
       "oauth_client": [
         {
-          "client_id": "861348409104-7qfop8aas21v7uf7s9p05jald3k3u0sl.apps.googleusercontent.com",
+          "client_id": "861348409104-uk4i8ef3hass8ir1ncej8abdpsqfah3b.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.donat.primerandroid",
+            "package_name": "edu.unpsjb.inspiringquote",
             "certificate_hash": "dbca99a18168784a4f816f0df444936d3f519357"
           }
         },
