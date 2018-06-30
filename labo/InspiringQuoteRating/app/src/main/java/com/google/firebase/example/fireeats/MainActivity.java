@@ -34,9 +34,9 @@ import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.example.fireeats.adapter.RestaurantAdapter;
-import com.google.firebase.example.fireeats.model.Restaurant;
-import com.google.firebase.example.fireeats.util.RestaurantUtil;
+import com.google.firebase.example.fireeats.adapter.QuoteAdapter;
+import com.google.firebase.example.fireeats.model.Quote;
+import com.google.firebase.example.fireeats.util.QuoteUtil;
 import com.google.firebase.example.fireeats.viewmodel.MainActivityViewModel;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -52,7 +52,7 @@ import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity implements
         FilterDialogFragment.FilterListener,
-        RestaurantAdapter.OnRestaurantSelectedListener {
+        QuoteAdapter.OnQuoteSelectedListener {
 
     private static final String TAG = "MainActivity";
 
@@ -69,8 +69,8 @@ public class MainActivity extends AppCompatActivity implements
     @BindView(R.id.text_current_sort_by)
     TextView mCurrentSortByView;
 
-    @BindView(R.id.recycler_restaurants)
-    RecyclerView mRestaurantsRecycler;
+    @BindView(R.id.recycler_quotes)
+    RecyclerView mQuotesRecycler;
 
     @BindView(R.id.view_empty)
     ViewGroup mEmptyView;;
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements
     private Query mQuery;
 
     private FilterDialogFragment mFilterDialog;
-    private RestaurantAdapter mAdapter;
+    private QuoteAdapter mAdapter;
 
     private MainActivityViewModel mViewModel;
 
@@ -108,8 +108,8 @@ public class MainActivity extends AppCompatActivity implements
 
         mFirestore = FirebaseFirestore.getInstance();
 
-        // Get the 50 highest rated restaurants
-        mQuery = mFirestore.collection("restaurants")
+        // Get the 50 highest rated quotes
+        mQuery = mFirestore.collection("quotes")
                 .orderBy("avgRating", Query.Direction.DESCENDING)
                 .limit(LIMIT);
     }
@@ -119,16 +119,16 @@ public class MainActivity extends AppCompatActivity implements
             Log.w(TAG, "No query, not initializing RecyclerView");
         }
 
-        mAdapter = new RestaurantAdapter(mQuery, this) {
+        mAdapter = new QuoteAdapter(mQuery, this) {
 
             @Override
             protected void onDataChanged() {
                 // Show/hide content if the query returns empty.
                 if (getItemCount() == 0) {
-                    mRestaurantsRecycler.setVisibility(View.GONE);
+                    mQuotesRecycler.setVisibility(View.GONE);
                     mEmptyView.setVisibility(View.VISIBLE);
                 } else {
-                    mRestaurantsRecycler.setVisibility(View.VISIBLE);
+                    mQuotesRecycler.setVisibility(View.VISIBLE);
                     mEmptyView.setVisibility(View.GONE);
                 }
             }
@@ -141,8 +141,8 @@ public class MainActivity extends AppCompatActivity implements
             }
         };
 
-        mRestaurantsRecycler.setLayoutManager(new LinearLayoutManager(this));
-        mRestaurantsRecycler.setAdapter(mAdapter);
+        mQuotesRecycler.setLayoutManager(new LinearLayoutManager(this));
+        mQuotesRecycler.setAdapter(mAdapter);
     }
 
     @Override
@@ -173,15 +173,15 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void onAddItemsClicked() {
-        // Get a reference to the restaurants collection
-        CollectionReference restaurants = mFirestore.collection("restaurants");
+        // Get a reference to the quotes collection
+        CollectionReference quotes = mFirestore.collection("quotes");
 
         for (int i = 0; i < 10; i++) {
-            // Get a random Restaurant POJO
-            Restaurant restaurant = RestaurantUtil.getRandom(this);
+            // Get a random Quote POJO
+            Quote quote = QuoteUtil.getRandom(this);
 
-            // Add a new document to the restaurants collection
-            restaurants.add(restaurant);
+            // Add a new document to the quotes collection
+            quotes.add(quote);
         }
     }
 
@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements
     public void onFilter(Filters filters) {
 
         // Construct query basic query
-        Query query = mFirestore.collection("restaurants");
+        Query query = mFirestore.collection("quotes");
 
         // Category (equality filter)
         if (filters.hasCategory()) {
@@ -272,10 +272,10 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onRestaurantSelected(DocumentSnapshot restaurant) {
-        // Go to the details page for the selected restaurant
-        Intent intent = new Intent(this, RestaurantDetailActivity.class);
-        intent.putExtra(RestaurantDetailActivity.KEY_RESTAURANT_ID, restaurant.getId());
+    public void onQuoteSelected(DocumentSnapshot quote) {
+        // Go to the details page for the selected quote
+        Intent intent = new Intent(this, QuoteDetailActivity.class);
+        intent.putExtra(QuoteDetailActivity.KEY_QUOTE_ID, quote.getId());
 
         startActivity(intent);
     }

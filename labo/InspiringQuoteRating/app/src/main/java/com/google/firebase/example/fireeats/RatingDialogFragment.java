@@ -39,10 +39,10 @@ public class RatingDialogFragment extends DialogFragment {
 
     public static final String TAG = "RatingDialog";
 
-    @BindView(R.id.restaurant_form_rating)
+    @BindView(R.id.quote_form_rating)
     MaterialRatingBar mRatingBar;
 
-    @BindView(R.id.restaurant_form_text)
+    @BindView(R.id.quote_form_text)
     EditText mRatingText;
 
     interface RatingListener {
@@ -82,7 +82,7 @@ public class RatingDialogFragment extends DialogFragment {
 
     }
 
-    @OnClick(R.id.restaurant_form_button)
+    @OnClick(R.id.quote_form_button)
     public void onSubmitClicked(View view) {
         Rating rating = new Rating(
                 FirebaseAuth.getInstance().getCurrentUser(),
@@ -96,7 +96,7 @@ public class RatingDialogFragment extends DialogFragment {
         dismiss();
     }
 
-    @OnClick(R.id.restaurant_form_cancel)
+    @OnClick(R.id.quote_form_cancel)
     public void onCancelClicked(View view) {
         dismiss();
     }

@@ -18,7 +18,7 @@
 import android.content.Context;
 
 import com.google.firebase.example.fireeats.R;
-import com.google.firebase.example.fireeats.model.Restaurant;
+import com.google.firebase.example.fireeats.model.Quote;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -28,16 +28,16 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Utilities for Restaurants.
+ * Utilities for Quotes.
  */
-public class RestaurantUtil {
+public class QuoteUtil {
 
-    private static final String TAG = "RestaurantUtil";
+    private static final String TAG = "QuoteUtil";
 
     private static final ThreadPoolExecutor EXECUTOR = new ThreadPoolExecutor(2, 4, 60,
             TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
 
-    private static final String RESTAURANT_URL_FMT = "https://storage.googleapis.com/firestorequickstarts.appspot.com/food_%d.png";
+    private static final String QUOTE_URL_FMT = "https://storage.googleapis.com/firestorequickstarts.appspot.com/food_%d.png";
 
     private static final int MAX_IMAGE_NUM = 22;
 
@@ -54,7 +54,7 @@ public class RestaurantUtil {
     };
 
     private static final String[] NAME_SECOND_WORDS = {
-            "Restaurant",
+            "Quote",
             "Cafe",
             "Spot",
             "Eatin' Place",
@@ -65,10 +65,10 @@ public class RestaurantUtil {
 
 
     /**
-     * Create a random Restaurant POJO.
+     * Create a random Quote POJO.
      */
-    public static Restaurant getRandom(Context context) {
-        Restaurant restaurant = new Restaurant();
+    public static Quote getRandom(Context context) {
+        Quote quote = new Quote();
         Random random = new Random();
 
         // Cities (first elemnt is 'Any')
@@ -81,15 +81,15 @@ public class RestaurantUtil {
 
         int[] prices = new int[]{1, 2, 3};
 
-        restaurant.setName(getRandomName(random));
-        restaurant.setCity(getRandomString(cities, random));
-        restaurant.setCategory(getRandomString(categories, random));
-        restaurant.setPhoto(getRandomImageUrl(random));
-        restaurant.setPrice(getRandomInt(prices, random));
-        //restaurant.setAvgRating(getRandomRating(random));
-        //restaurant.setNumRatings(random.nextInt(20));
+        quote.setName(getRandomName(random));
+        quote.setCity(getRandomString(cities, random));
+        quote.setCategory(getRandomString(categories, random));
+        quote.setPhoto(getRandomImageUrl(random));
+        quote.setPrice(getRandomInt(prices, random));
+        //quote.setAvgRating(getRandomRating(random));
+        //quote.setNumRatings(random.nextInt(20));
 
-        return restaurant;
+        return quote;
     }
 
 
@@ -100,14 +100,14 @@ public class RestaurantUtil {
         // Integer between 1 and MAX_IMAGE_NUM (inclusive)
         int id = random.nextInt(MAX_IMAGE_NUM) + 1;
 
-        return String.format(Locale.getDefault(), RESTAURANT_URL_FMT, id);
+        return String.format(Locale.getDefault(), QUOTE_URL_FMT, id);
     }
 
     /**
      * Get price represented as dollar signs.
      */
-    public static String getPriceString(Restaurant restaurant) {
-        return getPriceString(restaurant.getPrice());
+    public static String getPriceString(Quote quote) {
+        return getPriceString(quote.getPrice());
     }
 
     /**

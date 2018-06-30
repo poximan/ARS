@@ -25,8 +25,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.example.fireeats.R;
-import com.google.firebase.example.fireeats.model.Restaurant;
-import com.google.firebase.example.fireeats.util.RestaurantUtil;
+import com.google.firebase.example.fireeats.model.Quote;
+import com.google.firebase.example.fireeats.util.QuoteUtil;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
 
@@ -35,19 +35,19 @@ import butterknife.ButterKnife;
 import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 
 /**
- * RecyclerView adapter for a list of Restaurants.
+ * RecyclerView adapter for a list of Quotes.
  */
-public class RestaurantAdapter extends FirestoreAdapter<RestaurantAdapter.ViewHolder> {
+public class QuoteAdapter extends FirestoreAdapter<QuoteAdapter.ViewHolder> {
 
-    public interface OnRestaurantSelectedListener {
+    public interface OnQuoteSelectedListener {
 
-        void onRestaurantSelected(DocumentSnapshot restaurant);
+        void onQuoteSelected(DocumentSnapshot quote);
 
     }
 
-    private OnRestaurantSelectedListener mListener;
+    private OnQuoteSelectedListener mListener;
 
-    public RestaurantAdapter(Query query, OnRestaurantSelectedListener listener) {
+    public QuoteAdapter(Query query, OnQuoteSelectedListener listener) {
         super(query);
         mListener = listener;
     }
@@ -55,7 +55,7 @@ public class RestaurantAdapter extends FirestoreAdapter<RestaurantAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        return new ViewHolder(inflater.inflate(R.layout.item_restaurant, parent, false));
+        return new ViewHolder(inflater.inflate(R.layout.item_quote, parent, false));
     }
 
     @Override
@@ -65,25 +65,25 @@ public class RestaurantAdapter extends FirestoreAdapter<RestaurantAdapter.ViewHo
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.restaurant_item_image)
+        @BindView(R.id.quote_item_image)
         ImageView imageView;
 
-        @BindView(R.id.restaurant_item_name)
+        @BindView(R.id.quote_item_name)
         TextView nameView;
 
-        @BindView(R.id.restaurant_item_rating)
+        @BindView(R.id.quote_item_rating)
         MaterialRatingBar ratingBar;
 
-        @BindView(R.id.restaurant_item_num_ratings)
+        @BindView(R.id.quote_item_num_ratings)
         TextView numRatingsView;
 
-        @BindView(R.id.restaurant_item_price)
+        @BindView(R.id.quote_item_price)
         TextView priceView;
 
-        @BindView(R.id.restaurant_item_category)
+        @BindView(R.id.quote_item_category)
         TextView categoryView;
 
-        @BindView(R.id.restaurant_item_city)
+        @BindView(R.id.quote_item_city)
         TextView cityView;
 
         public ViewHolder(View itemView) {
@@ -92,30 +92,30 @@ public class RestaurantAdapter extends FirestoreAdapter<RestaurantAdapter.ViewHo
         }
 
         public void bind(final DocumentSnapshot snapshot,
-                         final OnRestaurantSelectedListener listener) {
+                         final OnQuoteSelectedListener listener) {
 
-            Restaurant restaurant = snapshot.toObject(Restaurant.class);
+            Quote quote = snapshot.toObject(Quote.class);
             Resources resources = itemView.getResources();
 
             // Load image
             Glide.with(imageView.getContext())
-                    .load(restaurant.getPhoto())
+                    .load(quote.getPhoto())
                     .into(imageView);
 
-            nameView.setText(restaurant.getName());
-            ratingBar.setRating((float) restaurant.getAvgRating());
-            cityView.setText(restaurant.getCity());
-            categoryView.setText(restaurant.getCategory());
+            nameView.setText(quote.getName());
+            ratingBar.setRating((float) quote.getAvgRating());
+            cityView.setText(quote.getCity());
+            categoryView.setText(quote.getCategory());
             numRatingsView.setText(resources.getString(R.string.fmt_num_ratings,
-                    restaurant.getNumRatings()));
-            priceView.setText(RestaurantUtil.getPriceString(restaurant));
+                    quote.getNumRatings()));
+            priceView.setText(QuoteUtil.getPriceString(quote));
 
             // Click listener
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (listener != null) {
-                        listener.onRestaurantSelected(snapshot);
+                        listener.onQuoteSelected(snapshot);
                     }
                 }
             });

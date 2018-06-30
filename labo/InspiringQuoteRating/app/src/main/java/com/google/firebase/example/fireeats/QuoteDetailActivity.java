@@ -36,8 +36,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.example.fireeats.adapter.RatingAdapter;
 import com.google.firebase.example.fireeats.model.Rating;
-import com.google.firebase.example.fireeats.model.Restaurant;
-import com.google.firebase.example.fireeats.util.RestaurantUtil;
+import com.google.firebase.example.fireeats.model.Quote;
+import com.google.firebase.example.fireeats.util.QuoteUtil;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -52,32 +52,32 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 
-public class RestaurantDetailActivity extends AppCompatActivity
+public class QuoteDetailActivity extends AppCompatActivity
         implements EventListener<DocumentSnapshot>, RatingDialogFragment.RatingListener {
 
-    private static final String TAG = "RestaurantDetail";
+    private static final String TAG = "QuoteDetail";
 
-    public static final String KEY_RESTAURANT_ID = "key_restaurant_id";
+    public static final String KEY_QUOTE_ID = "key_quote_id";
 
-    @BindView(R.id.restaurant_image)
+    @BindView(R.id.quote_image)
     ImageView mImageView;
 
-    @BindView(R.id.restaurant_name)
+    @BindView(R.id.quote_name)
     TextView mNameView;
 
-    @BindView(R.id.restaurant_rating)
+    @BindView(R.id.quote_rating)
     MaterialRatingBar mRatingIndicator;
 
-    @BindView(R.id.restaurant_num_ratings)
+    @BindView(R.id.quote_num_ratings)
     TextView mNumRatingsView;
 
-    @BindView(R.id.restaurant_city)
+    @BindView(R.id.quote_city)
     TextView mCityView;
 
-    @BindView(R.id.restaurant_category)
+    @BindView(R.id.quote_category)
     TextView mCategoryView;
 
-    @BindView(R.id.restaurant_price)
+    @BindView(R.id.quote_price)
     TextView mPriceView;
 
     @BindView(R.id.view_empty_ratings)
@@ -89,31 +89,31 @@ public class RestaurantDetailActivity extends AppCompatActivity
     private RatingDialogFragment mRatingDialog;
 
     private FirebaseFirestore mFirestore;
-    private DocumentReference mRestaurantRef;
-    private ListenerRegistration mRestaurantRegistration;
+    private DocumentReference mQuoteRef;
+    private ListenerRegistration mQuoteRegistration;
 
     private RatingAdapter mRatingAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_restaurant_detail);
+        setContentView(R.layout.activity_quote_detail);
         ButterKnife.bind(this);
 
-        // Get restaurant ID from extras
-        String restaurantId = getIntent().getExtras().getString(KEY_RESTAURANT_ID);
-        if (restaurantId == null) {
-            throw new IllegalArgumentException("Must pass extra " + KEY_RESTAURANT_ID);
+        // Get quote ID from extras
+        String quoteId = getIntent().getExtras().getString(KEY_QUOTE_ID);
+        if (quoteId == null) {
+            throw new IllegalArgumentException("Must pass extra " + KEY_QUOTE_ID);
         }
 
         // Initialize Firestore
         mFirestore = FirebaseFirestore.getInstance();
 
-        // Get reference to the restaurant
-        mRestaurantRef = mFirestore.collection("restaurants").document(restaurantId);
+        // Get reference to the quote
+        mQuoteRef = mFirestore.collection("quotes").document(quoteId);
 
         // Get ratings
-        Query ratingsQuery = mRestaurantRef
+        Query ratingsQuery = mQuoteRef
                 .collection("ratings")
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .limit(50);
@@ -143,7 +143,7 @@ public class RestaurantDetailActivity extends AppCompatActivity
         super.onStart();
 
         mRatingAdapter.startListening();
-        mRestaurantRegistration = mRestaurantRef.addSnapshotListener(this);
+        mQuoteRegistration = mQuoteRef.addSnapshotListener(this);
     }
 
     @Override
@@ -152,16 +152,16 @@ public class RestaurantDetailActivity extends AppCompatActivity
 
         mRatingAdapter.stopListening();
 
-        if (mRestaurantRegistration != null) {
-            mRestaurantRegistration.remove();
-            mRestaurantRegistration = null;
+        if (mQuoteRegistration != null) {
+            mQuoteRegistration.remove();
+            mQuoteRegistration = null;
         }
     }
 
-    private Task<Void> addRating(final DocumentReference restaurantRef, final Rating rating) {
+    private Task<Void> addRating(final DocumentReference quoteRef, final Rating rating) {
 
         // Create reference for new rating, for use inside the transaction
-        final DocumentReference ratingRef = restaurantRef.collection("ratings")
+        final DocumentReference ratingRef = quoteRef.collection("ratings")
                 .document();
 
         // In a transaction, add the new rating and update the aggregate totals
@@ -170,24 +170,24 @@ public class RestaurantDetailActivity extends AppCompatActivity
             public Void apply(Transaction transaction)
                     throws FirebaseFirestoreException {
 
-                Restaurant restaurant = transaction.get(restaurantRef)
-                        .toObject(Restaurant.class);
+                Quote quote = transaction.get(quoteRef)
+                        .toObject(Quote.class);
 
                 // Compute new number of ratings
-                int newNumRatings = restaurant.getNumRatings() + 1;
+                int newNumRatings = quote.getNumRatings() + 1;
 
                 // Compute new average rating
-                double oldRatingTotal = restaurant.getAvgRating() *
-                        restaurant.getNumRatings();
+                double oldRatingTotal = quote.getAvgRating() *
+                        quote.getNumRatings();
                 double newAvgRating = (oldRatingTotal + rating.getRating()) /
                         newNumRatings;
 
-                // Set new restaurant info
-                restaurant.setNumRatings(newNumRatings);
-                restaurant.setAvgRating(newAvgRating);
+                // Set new quote info
+                quote.setNumRatings(newNumRatings);
+                quote.setAvgRating(newAvgRating);
 
                 // Commit to Firestore
-                transaction.set(restaurantRef, restaurant);
+                transaction.set(quoteRef, quote);
                 transaction.set(ratingRef, rating);
 
                 return null;
@@ -196,33 +196,33 @@ public class RestaurantDetailActivity extends AppCompatActivity
     }
 
     /**
-     * Listener for the Restaurant document ({@link #mRestaurantRef}).
+     * Listener for the Quote document ({@link #mQuoteRef}).
      */
     @Override
     public void onEvent(DocumentSnapshot snapshot, FirebaseFirestoreException e) {
         if (e != null) {
-            Log.w(TAG, "restaurant:onEvent", e);
+            Log.w(TAG, "quote:onEvent", e);
             return;
         }
 
-        onRestaurantLoaded(snapshot.toObject(Restaurant.class));
+        onQuoteLoaded(snapshot.toObject(Quote.class));
     }
 
-    private void onRestaurantLoaded(Restaurant restaurant) {
-        mNameView.setText(restaurant.getName());
-        mRatingIndicator.setRating((float) restaurant.getAvgRating());
-        mNumRatingsView.setText(getString(R.string.fmt_num_ratings, restaurant.getNumRatings()));
-        mCityView.setText(restaurant.getCity());
-        mCategoryView.setText(restaurant.getCategory());
-        mPriceView.setText(RestaurantUtil.getPriceString(restaurant));
+    private void onQuoteLoaded(Quote quote) {
+        mNameView.setText(quote.getName());
+        mRatingIndicator.setRating((float) quote.getAvgRating());
+        mNumRatingsView.setText(getString(R.string.fmt_num_ratings, quote.getNumRatings()));
+        mCityView.setText(quote.getCity());
+        mCategoryView.setText(quote.getCategory());
+        mPriceView.setText(QuoteUtil.getPriceString(quote));
 
         // Background image
         Glide.with(mImageView.getContext())
-                .load(restaurant.getPhoto())
+                .load(quote.getPhoto())
                 .into(mImageView);
     }
 
-    @OnClick(R.id.restaurant_button_back)
+    @OnClick(R.id.quote_button_back)
     public void onBackArrowClicked(View view) {
         onBackPressed();
     }
@@ -235,7 +235,7 @@ public class RestaurantDetailActivity extends AppCompatActivity
     @Override
     public void onRating(Rating rating) {
         // In a transaction, add the new rating and update the aggregate totals
-        addRating(mRestaurantRef, rating)
+        addRating(mQuoteRef, rating)
                 .addOnSuccessListener(this, new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
