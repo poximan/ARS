@@ -77,14 +77,8 @@ public class QuoteAdapter extends FirestoreAdapter<QuoteAdapter.ViewHolder> {
         @BindView(R.id.quote_item_num_ratings)
         TextView numRatingsView;
 
-        @BindView(R.id.quote_item_price)
-        TextView priceView;
-
         @BindView(R.id.quote_item_category)
         TextView categoryView;
-
-        @BindView(R.id.quote_item_city)
-        TextView cityView;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -104,11 +98,9 @@ public class QuoteAdapter extends FirestoreAdapter<QuoteAdapter.ViewHolder> {
 
             nameView.setText(quote.getName());
             ratingBar.setRating((float) quote.getAvgRating());
-            cityView.setText(quote.getCity());
             categoryView.setText(quote.getCategory());
             numRatingsView.setText(resources.getString(R.string.fmt_num_ratings,
                     quote.getNumRatings()));
-            priceView.setText(QuoteUtil.getPriceString(quote));
 
             // Click listener
             itemView.setOnClickListener(new View.OnClickListener() {

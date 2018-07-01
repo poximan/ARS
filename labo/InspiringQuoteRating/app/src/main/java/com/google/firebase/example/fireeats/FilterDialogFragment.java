@@ -17,19 +17,33 @@
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.example.fireeats.model.Quote;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static android.R.layout.simple_spinner_item;
 
 /**
  * Dialog Fragment containing filter form.
@@ -41,7 +55,6 @@ public class FilterDialogFragment extends DialogFragment {
     interface FilterListener {
 
         void onFilter(Filters filters);
-
     }
 
     private View mRootView;
@@ -49,14 +62,8 @@ public class FilterDialogFragment extends DialogFragment {
     @BindView(R.id.spinner_category)
     Spinner mCategorySpinner;
 
-    @BindView(R.id.spinner_city)
-    Spinner mCitySpinner;
-
     @BindView(R.id.spinner_sort)
     Spinner mSortSpinner;
-
-    @BindView(R.id.spinner_price)
-    Spinner mPriceSpinner;
 
     private FilterListener mFilterListener;
 
@@ -78,6 +85,25 @@ public class FilterDialogFragment extends DialogFragment {
         if (context instanceof FilterListener) {
             mFilterListener = (FilterListener) context;
         }
+
+        // TODO que el filtro por autor se actualice mas alla del resource de inicio
+        final List categories = new ArrayList();
+        FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
+        mFirestore.collection("quotes")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                categories.add(document.getData().get("category"));
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
     }
 
     @Override
@@ -113,35 +139,10 @@ public class FilterDialogFragment extends DialogFragment {
     }
 
     @Nullable
-    private String getSelectedCity() {
-        String selected = (String) mCitySpinner.getSelectedItem();
-        if (getString(R.string.value_any_city).equals(selected)) {
-            return null;
-        } else {
-            return selected;
-        }
-    }
-
-    private int getSelectedPrice() {
-        String selected = (String) mPriceSpinner.getSelectedItem();
-        if (selected.equals(getString(R.string.price_1))) {
-            return 1;
-        } else if (selected.equals(getString(R.string.price_2))) {
-            return 2;
-        } else if (selected.equals(getString(R.string.price_3))) {
-            return 3;
-        } else {
-            return -1;
-        }
-    }
-
-    @Nullable
     private String getSelectedSortBy() {
         String selected = (String) mSortSpinner.getSelectedItem();
         if (getString(R.string.sort_by_rating).equals(selected)) {
             return Quote.FIELD_AVG_RATING;
-        } if (getString(R.string.sort_by_price).equals(selected)) {
-            return Quote.FIELD_PRICE;
         } if (getString(R.string.sort_by_popularity).equals(selected)) {
             return Quote.FIELD_POPULARITY;
         }
@@ -154,8 +155,6 @@ public class FilterDialogFragment extends DialogFragment {
         String selected = (String) mSortSpinner.getSelectedItem();
         if (getString(R.string.sort_by_rating).equals(selected)) {
             return Query.Direction.DESCENDING;
-        } if (getString(R.string.sort_by_price).equals(selected)) {
-            return Query.Direction.ASCENDING;
         } if (getString(R.string.sort_by_popularity).equals(selected)) {
             return Query.Direction.DESCENDING;
         }
@@ -166,8 +165,6 @@ public class FilterDialogFragment extends DialogFragment {
     public void resetFilters() {
         if (mRootView != null) {
             mCategorySpinner.setSelection(0);
-            mCitySpinner.setSelection(0);
-            mPriceSpinner.setSelection(0);
             mSortSpinner.setSelection(0);
         }
     }
@@ -177,8 +174,6 @@ public class FilterDialogFragment extends DialogFragment {
 
         if (mRootView != null) {
             filters.setCategory(getSelectedCategory());
-            filters.setCity(getSelectedCity());
-            filters.setPrice(getSelectedPrice());
             filters.setSortBy(getSelectedSortBy());
             filters.setSortDirection(getSortDirection());
         }

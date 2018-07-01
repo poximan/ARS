@@ -32,117 +32,49 @@ import java.util.concurrent.TimeUnit;
  */
 public class QuoteUtil {
 
-    private static final String TAG = "QuoteUtil";
-
-    private static final ThreadPoolExecutor EXECUTOR = new ThreadPoolExecutor(2, 4, 60,
-            TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
-
-    private static final String QUOTE_URL_FMT = "https://storage.googleapis.com/firestorequickstarts.appspot.com/food_%d.png";
-
-    private static final int MAX_IMAGE_NUM = 22;
-
-    private static final String[] NAME_FIRST_WORDS = {
-            "Foo",
-            "Bar",
-            "Baz",
-            "Qux",
-            "Fire",
-            "Sam's",
-            "World Famous",
-            "Google",
-            "The Best",
+    private static final String[] quote_urls = {
+            "https://cdn.pixabay.com/photo/2012/04/25/00/35/speech-bubble-41392_960_720.png",
+            "https://cdn.pixabay.com/photo/2012/04/16/12/35/callout-35799_960_720.png",
+            "https://cdn.pixabay.com/photo/2012/04/12/19/48/callout-30368_960_720.png",
+            "https://cdn.pixabay.com/photo/2018/02/28/02/29/art-3187088_960_720.jpg",
+            "https://cdn.pixabay.com/photo/2016/06/02/10/14/yada-yada-1430679_960_720.jpg",
+            "https://cdn.pixabay.com/photo/2016/06/03/07/27/yada-yada-1432923_960_720.jpg",
+            "https://cdn.pixabay.com/photo/2016/01/12/12/40/colored-pencil-1135328_960_720.png",
+            "https://cdn.pixabay.com/photo/2015/12/07/01/41/pen-1080215_960_720.jpg"
     };
 
-    private static final String[] NAME_SECOND_WORDS = {
-            "Quote",
-            "Cafe",
-            "Spot",
-            "Eatin' Place",
-            "Eatery",
-            "Drive Thru",
-            "Diner",
-    };
-
+    private static final int MAX_IMAGE_NUM = 8;
 
     /**
      * Create a random Quote POJO.
      */
-    public static Quote getRandom(Context context) {
-        Quote quote = new Quote();
-        Random random = new Random();
+    public static Quote getRandom(int i, Context context) {
 
-        // Cities (first elemnt is 'Any')
-        String[] cities = context.getResources().getStringArray(R.array.cities);
-        cities = Arrays.copyOfRange(cities, 1, cities.length);
+        Quote quote = new Quote();
 
         // Categories (first element is 'Any')
         String[] categories = context.getResources().getStringArray(R.array.categories);
         categories = Arrays.copyOfRange(categories, 1, categories.length);
 
-        int[] prices = new int[]{1, 2, 3};
+        // Quotes (first element is 'Any')
+        String[] quotes = context.getResources().getStringArray(R.array.quotes);
+        quotes = Arrays.copyOfRange(quotes, 1, quotes.length);
 
-        quote.setName(getRandomName(random));
-        quote.setCity(getRandomString(cities, random));
-        quote.setCategory(getRandomString(categories, random));
-        quote.setPhoto(getRandomImageUrl(random));
-        quote.setPrice(getRandomInt(prices, random));
-        //quote.setAvgRating(getRandomRating(random));
-        //quote.setNumRatings(random.nextInt(20));
+        quote.setName(quotes[i]);
+        quote.setCategory(categories[i]);
+        quote.setPhoto(getRandomImageUrl());
 
         return quote;
     }
-
-
+    
     /**
      * Get a random image.
      */
-    private static String getRandomImageUrl(Random random) {
+    public static String getRandomImageUrl() {
+
+        Random random = new Random();
         // Integer between 1 and MAX_IMAGE_NUM (inclusive)
-        int id = random.nextInt(MAX_IMAGE_NUM) + 1;
-
-        return String.format(Locale.getDefault(), QUOTE_URL_FMT, id);
+        int i = random.nextInt(MAX_IMAGE_NUM);
+        return String.format(Locale.getDefault(), quote_urls[i]);
     }
-
-    /**
-     * Get price represented as dollar signs.
-     */
-    public static String getPriceString(Quote quote) {
-        return getPriceString(quote.getPrice());
-    }
-
-    /**
-     * Get price represented as dollar signs.
-     */
-    public static String getPriceString(int priceInt) {
-        switch (priceInt) {
-            case 1:
-                return "$";
-            case 2:
-                return "$$";
-            case 3:
-            default:
-                return "$$$";
-        }
-    }
-
-    private static double getRandomRating(Random random) {
-        double min = 1.0;
-        return min + (random.nextDouble() * 4.0);
-    }
-
-    private static String getRandomName(Random random) {
-        return getRandomString(NAME_FIRST_WORDS, random) + " "
-                + getRandomString(NAME_SECOND_WORDS, random);
-    }
-
-    private static String getRandomString(String[] array, Random random) {
-        int ind = random.nextInt(array.length);
-        return array[ind];
-    }
-
-    private static int getRandomInt(int[] array, Random random) {
-        int ind = random.nextInt(array.length);
-        return array[ind];
-    }
-
 }

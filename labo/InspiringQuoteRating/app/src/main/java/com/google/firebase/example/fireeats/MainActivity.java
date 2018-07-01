@@ -176,13 +176,19 @@ public class MainActivity extends AppCompatActivity implements
         // Get a reference to the quotes collection
         CollectionReference quotes = mFirestore.collection("quotes");
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 3; i++) {
             // Get a random Quote POJO
-            Quote quote = QuoteUtil.getRandom(this);
+            Quote quote = QuoteUtil.getRandom(i, this);
 
             // Add a new document to the quotes collection
             quotes.add(quote);
         }
+    }
+
+    private void onAddQuoteClicked() {
+
+        Intent intent = new Intent(this, AddQuoteActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -194,16 +200,6 @@ public class MainActivity extends AppCompatActivity implements
         // Category (equality filter)
         if (filters.hasCategory()) {
             query = query.whereEqualTo("category", filters.getCategory());
-        }
-
-        // City (equality filter)
-        if (filters.hasCity()) {
-            query = query.whereEqualTo("city", filters.getCity());
-        }
-
-        // Price (equality filter)
-        if (filters.hasPrice()) {
-            query = query.whereEqualTo("price", filters.getPrice());
         }
 
         // Sort by (orderBy with direction)
@@ -241,6 +237,9 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.menu_sign_out:
                 AuthUI.getInstance().signOut(this);
                 startSignIn();
+                break;
+            case R.id.menu_add_quote:
+                onAddQuoteClicked();
                 break;
         }
         return super.onOptionsItemSelected(item);

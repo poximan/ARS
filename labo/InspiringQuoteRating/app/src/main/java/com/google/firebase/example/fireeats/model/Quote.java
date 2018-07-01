@@ -15,6 +15,7 @@
  */
  package com.google.firebase.example.fireeats.model;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
 /**
@@ -23,31 +24,23 @@ import com.google.firebase.firestore.IgnoreExtraProperties;
 @IgnoreExtraProperties
 public class Quote {
 
-    public static final String FIELD_CITY = "city";
-    public static final String FIELD_CATEGORY = "category";
-    public static final String FIELD_PRICE = "price";
     public static final String FIELD_POPULARITY = "numRatings";
     public static final String FIELD_AVG_RATING = "avgRating";
 
+    private String usuario;
     private String name;
-    private String city;
     private String category;
     private String photo;
-    private int price;
     private int numRatings;
     private double avgRating;
 
-    public Quote() {}
-
-    public Quote(String name, String city, String category, String photo,
-                      int price, int numRatings, double avgRating) {
-        this.name = name;
-        this.city = city;
-        this.category = category;
-        this.price = price;
-        this.numRatings = numRatings;
-        this.avgRating = avgRating;
+    public Quote() {
+        this.usuario = FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
+
+    public String getUsuario() { return usuario; }
+
+    public void setUsuario(String usuario) { this.usuario = usuario; }
 
     public String getName() {
         return name;
@@ -55,14 +48,6 @@ public class Quote {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
     }
 
     public String getCategory() {
@@ -79,14 +64,6 @@ public class Quote {
 
     public void setPhoto(String photo) {
         this.photo = photo;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
     }
 
     public int getNumRatings() {

@@ -18,6 +18,7 @@
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,10 +31,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.example.fireeats.adapter.RatingAdapter;
 import com.google.firebase.example.fireeats.model.Rating;
 import com.google.firebase.example.fireeats.model.Quote;
@@ -45,6 +48,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
 import com.google.firebase.firestore.Transaction;
 
 import butterknife.BindView;
@@ -71,14 +77,8 @@ public class QuoteDetailActivity extends AppCompatActivity
     @BindView(R.id.quote_num_ratings)
     TextView mNumRatingsView;
 
-    @BindView(R.id.quote_city)
-    TextView mCityView;
-
     @BindView(R.id.quote_category)
     TextView mCategoryView;
-
-    @BindView(R.id.quote_price)
-    TextView mPriceView;
 
     @BindView(R.id.view_empty_ratings)
     ViewGroup mEmptyView;
@@ -136,6 +136,25 @@ public class QuoteDetailActivity extends AppCompatActivity
         mRatingsRecycler.setAdapter(mRatingAdapter);
 
         mRatingDialog = new RatingDialogFragment();
+
+        // TODO que la misma persona no pueda votar dos veces
+
+        mQuoteRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                FloatingActionButton view = (FloatingActionButton) findViewById(R.id.fab_show_rating_dialog);
+
+                String quote_user = (String) task.getResult().getData().get("usuario");
+                String this_user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                if(quote_user.equals(this_user))
+                    view.setVisibility(View.INVISIBLE);
+                else
+                    view.setVisibility(View.VISIBLE);
+
+            }
+        });
     }
 
     @Override
@@ -212,9 +231,7 @@ public class QuoteDetailActivity extends AppCompatActivity
         mNameView.setText(quote.getName());
         mRatingIndicator.setRating((float) quote.getAvgRating());
         mNumRatingsView.setText(getString(R.string.fmt_num_ratings, quote.getNumRatings()));
-        mCityView.setText(quote.getCity());
         mCategoryView.setText(quote.getCategory());
-        mPriceView.setText(QuoteUtil.getPriceString(quote));
 
         // Background image
         Glide.with(mImageView.getContext())
@@ -228,7 +245,7 @@ public class QuoteDetailActivity extends AppCompatActivity
     }
 
     @OnClick(R.id.fab_show_rating_dialog)
-    public void onAddRatingClicked(View view) {
+    public void onAddRatingClicked(View view){
         mRatingDialog.show(getSupportFragmentManager(), RatingDialogFragment.TAG);
     }
 

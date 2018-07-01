@@ -1,0 +1,4 @@
+borrar city, price
+
+nombre restaurante -> cita
+categoria -> autor

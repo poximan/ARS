@@ -5,15 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E0E0E0"
-    tools:context="com.google.firebase.example.fireeats.MainActivity">
+    tools:context="com.google.firebase.example.fireeats.MainActivity" >
 
+    <!-- app:logo="@drawable/ic_quote_white_24px" -->
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:theme="@style/AppTheme"
-        app:logo="@drawable/ic_quote_white_24px"
         app:popupTheme="@style/Theme.AppCompat.Light.DarkActionBar"
         app:title="@string/app_name"
         app:titleMarginStart="24dp"
@@ -128,7 +128,7 @@
 
         <ImageView
             style="@style/AppTheme.PizzaGuy"
-            android:src="@drawable/pizza_monster" />
+            android:src="@drawable/img_quote" />
 
         <TextView
             style="@style/AppTheme.Body1"

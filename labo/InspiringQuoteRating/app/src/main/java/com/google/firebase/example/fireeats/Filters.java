@@ -28,8 +28,6 @@ import com.google.firebase.firestore.Query;
 public class Filters {
 
     private String category = null;
-    private String city = null;
-    private int price = -1;
     private String sortBy = null;
     private Query.Direction sortDirection = null;
 
@@ -47,14 +45,6 @@ public class Filters {
         return !(TextUtils.isEmpty(category));
     }
 
-    public boolean hasCity() {
-        return !(TextUtils.isEmpty(city));
-    }
-
-    public boolean hasPrice() {
-        return (price > 0);
-    }
-
     public boolean hasSortBy() {
         return !(TextUtils.isEmpty(sortBy));
     }
@@ -65,22 +55,6 @@ public class Filters {
 
     public void setCategory(String category) {
         this.category = category;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
     }
 
     public String getSortBy() {
@@ -102,7 +76,7 @@ public class Filters {
     public String getSearchDescription(Context context) {
         StringBuilder desc = new StringBuilder();
 
-        if (category == null && city == null) {
+        if (category == null) {
             desc.append("<b>");
             desc.append(context.getString(R.string.all_quotes));
             desc.append("</b>");
@@ -114,30 +88,11 @@ public class Filters {
             desc.append("</b>");
         }
 
-        if (category != null && city != null) {
-            desc.append(" in ");
-        }
-
-        if (city != null) {
-            desc.append("<b>");
-            desc.append(city);
-            desc.append("</b>");
-        }
-
-        if (price > 0) {
-            desc.append(" for ");
-            desc.append("<b>");
-            desc.append(QuoteUtil.getPriceString(price));
-            desc.append("</b>");
-        }
-
         return desc.toString();
     }
 
     public String getOrderDescription(Context context) {
-        if (Quote.FIELD_PRICE.equals(sortBy)) {
-            return context.getString(R.string.sorted_by_price);
-        } else if (Quote.FIELD_POPULARITY.equals(sortBy)) {
+        if (Quote.FIELD_POPULARITY.equals(sortBy)) {
             return context.getString(R.string.sorted_by_popularity);
         } else {
             return context.getString(R.string.sorted_by_rating);
