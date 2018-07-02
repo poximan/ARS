@@ -53,6 +53,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Source;
 import com.google.firebase.firestore.Transaction;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -86,6 +89,9 @@ public class QuoteDetailActivity extends AppCompatActivity
     @BindView(R.id.recycler_ratings)
     RecyclerView mRatingsRecycler;
 
+    @BindView(R.id.fab_show_rating_dialog)
+    FloatingActionButton view_button_plus;
+
     private RatingDialogFragment mRatingDialog;
 
     private FirebaseFirestore mFirestore;
@@ -96,9 +102,13 @@ public class QuoteDetailActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quote_detail);
         ButterKnife.bind(this);
+
+        // deshabilitar por defecto hasta confirmar que puede habilitarse
+        view_button_plus.setVisibility(View.INVISIBLE);
 
         // Get quote ID from extras
         String quoteId = getIntent().getExtras().getString(KEY_QUOTE_ID);
@@ -137,24 +147,7 @@ public class QuoteDetailActivity extends AppCompatActivity
 
         mRatingDialog = new RatingDialogFragment();
 
-        // TODO que la misma persona no pueda votar dos veces
-
-        mQuoteRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                FloatingActionButton view = (FloatingActionButton) findViewById(R.id.fab_show_rating_dialog);
-
-                String quote_user = (String) task.getResult().getData().get("usuario");
-                String this_user = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-                if(quote_user.equals(this_user))
-                    view.setVisibility(View.INVISIBLE);
-                else
-                    view.setVisibility(View.VISIBLE);
-
-            }
-        });
+        refresh();
     }
 
     @Override
@@ -175,6 +168,45 @@ public class QuoteDetailActivity extends AppCompatActivity
             mQuoteRegistration.remove();
             mQuoteRegistration = null;
         }
+        refresh();
+    }
+
+    private void refresh() {
+        super.onRestart();
+
+        mQuoteRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                // el usuario que dio de alta esta cita
+                final String quote_user = (String) task.getResult().getData().get("usuario");
+
+                // el usuario logueado en este momento
+                final String this_user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                // los usuarios que ya votaron
+                final List<String> rating_users = new ArrayList();
+
+                mQuoteRef.collection("ratings")
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        rating_users.add((String) document.getData().get("userId"));
+                                    }
+                                } else {
+                                    Log.d(TAG, "Error getting documents: ", task.getException());
+                                }
+                                Log.d("votos", quote_user + " / " + this_user + " / " + rating_users);
+                                if(!quote_user.equals(this_user) && !rating_users.contains(this_user))
+                                    view_button_plus.setVisibility(View.VISIBLE);
+                            }
+                        });
+            }
+        });
     }
 
     private Task<Void> addRating(final DocumentReference quoteRef, final Rating rating) {
